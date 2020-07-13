@@ -1,0 +1,80 @@
+[
+  {
+    "nameShort": "BT",
+    "nameFull": "BrianTexnology",
+    "address": "Schultz-23",
+    "numberPhone": "452175",
+    "dateOfEstablishment": "12/05/95",
+    "inn": "777666",
+    "number": "12489",
+    "ogrn": "19382",
+    "cennieBumagi": [
+      {
+        "code": "2013",
+        "dateOfEnd": "21/04/2020",
+        "nameOfOwner": "BT",
+        "money": "USD",
+        "id": "3"
+      },
+      {
+        "code": "2014",
+        "dateOfEnd": "21/05/2020",
+        "nameOfOwner": "BT",
+        "money": "USD",
+        "id": "12"
+      }
+    ]
+  },
+  {
+    "nameShort": "Sony",
+    "nameFull": "SonyEnterteiment",
+    "address": "Parad-52",
+    "numberPhone": "439135",
+    "dateOfEstablishment": "22/06/97",
+    "inn": "777666",
+    "number": "12679",
+    "ogrn": "43382",
+    "cennieBumagi": [
+      {
+        "code": "2012",
+        "dateOfEnd": "27/06/2020",
+        "nameOfOwner": "Sony",
+        "money": "RUB",
+        "id": "5"
+      },
+      {
+        "code": "2011",
+        "dateOfEnd": "21/09/2020",
+        "nameOfOwner": "BT",
+        "money": "USD",
+        "id": "10"
+      }
+    ]
+  },
+  {
+    "nameShort": "Philips",
+    "nameFull": "Philipsnews",
+    "address": "Pobeda-45",
+    "numberPhone": "454235",
+    "dateOfEstablishment": "10/02/96",
+    "inn": "799666",
+    "number": "11739",
+    "ogrn": "11982",
+    "cennieBumagi": [
+      {
+        "code": "2016",
+        "dateOfEnd": "17/07/2020",
+        "nameOfOwner": "Philips",
+        "money": "EUR",
+        "id": "4"
+      },
+      {
+        "code": "2019",
+        "dateOfEnd": "21/12/2020",
+        "nameOfOwner": "BT",
+        "money": "USD",
+        "id": "30"
+      }
+    ]
+  }
+]
