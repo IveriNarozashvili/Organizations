@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.Objects;
 
 public class Organization {
@@ -10,7 +11,7 @@ public class Organization {
     private String inn;
     private String number;
     private String ogrn;
-    private CennieBumagi cennieBumagi;
+    private List<CennieBumagi> cennieBumagi;
 
     @Override
     public String toString() {
@@ -112,11 +113,11 @@ public class Organization {
         this.ogrn = ogrn;
     }
 
-    public CennieBumagi getCennieBumagi() {
+    public List<CennieBumagi> getCennieBumagi() {
         return cennieBumagi;
     }
 
-    public void setCennieBumagi(CennieBumagi cennieBumagi) {
+    public void setCennieBumagi(List<CennieBumagi> cennieBumagi) {
         this.cennieBumagi = cennieBumagi;
     }
 }

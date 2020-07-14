@@ -1,85 +1,104 @@
-
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
+import org.modelmapper.ModelMapper;
 
 public class Main {
+    final static ModelMapper modelMapper = new ModelMapper();
 
     public static void main(String[] args) throws IOException {
+
         Map<String, Organization> organizationMap = new HashMap<>();
         final ObjectMapper mapper = new ObjectMapper();
+
         try {
-            List<Organization> organizations = mapper.readValue(new File("data.json"), new TypeReference<>() {});
-            for (Organization org : organizations){
-                organizationMap.put(org.getNameShort(),org);
+            List<Object> object = mapper.readValue(new File("data.json"), new TypeReference<>() {
+            });
+            List<Organization> organizations = convert(object, Organization.class);
+            for (Organization org : organizations) {
+                organizationMap.put(org.getNameShort(), org);
 
             }
-        }
-        catch (IOException e ){
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        for (Map.Entry<String, Organization> map : organizationMap.entrySet()){
-            System.out.println(map);
+
+
+        for (Map.Entry<String, Organization> map : organizationMap.entrySet()) {
+            System.out.println("\"" + map.getValue().getNameShort() + "\" - " + map.getValue().getDateOfEstablishment());
         }
-        //JSON parser object to parse read file
-//        JSONParser jsonParser = new JSONParser();
-//        try (FileReader reader = new FileReader("data.json")) {
-//            //Read JSON file
-//            Object obj = jsonParser.parse(reader);
-//
-//            JSONArray orgs = (JSONArray) obj;
-//            System.out.println(orgs);
-//
-//            //Iterate over employee array
-//            orgs.forEach(emp -> parseOrg((JSONObject) emp));
-//        } catch (IOException | ParseException e) {
-//            e.printStackTrace();
-//        }
+        System.out.println("----------");
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate current = LocalDate.now();
+
+        int count = 0;
+        for (Map.Entry<String, Organization> map : organizationMap.entrySet()) {
+            List<CennieBumagi> list = map.getValue().getCennieBumagi();
+            for (CennieBumagi cb : list) {
+                LocalDate localDate = LocalDate.parse(cb.getDateOfEnd(), formatter);
+                if (localDate.isBefore(current)) {
+                    count++;
+                    System.out.println(cb.getCode() + ", " + cb.getDateOfEnd() + ", " + cb.getMoney() + ", " + cb.getNameOfOwner());
+                }
+            }
+        }
+        System.out.println("Количество ценных бумаг: " + count);
+        System.out.println("----------");
+
+        Scanner scanner = new Scanner(System.in);
+        String date = scanner.nextLine();
+
+        LocalDate localDate = format(date);
+
+        for (Map.Entry<String, Organization> map : organizationMap.entrySet()) {
+            LocalDate orgDate = LocalDate.parse(map.getValue().getDateOfEstablishment(), formatter);
+            if (orgDate.isBefore(localDate)) {
+                System.out.println("\"" + map.getValue().getNameFull() + "\" - " + map.getValue().getDateOfEstablishment());
+            }
+        }
+        System.out.println("----------");
+
+        Scanner scanner2 = new Scanner(System.in);
+        String valuta = scanner2.nextLine();
+        for (Map.Entry<String, Organization> karta : organizationMap.entrySet()) {
+            List<CennieBumagi> list = karta.getValue().getCennieBumagi();
+            for (CennieBumagi cb : list) {
+
+                if (valuta.equals(cb.getMoney())) {
+                    System.out.println(cb.getCode() + ", " + cb.getId());
+                }
+            }
+        }
     }
 
-    private static void parseOrg(JSONObject org) {
-        JSONObject orgObject = (JSONObject) org.get("org");
+    public static LocalDate format(String date) {
+        String newDate = date.replaceAll("\\p{Punct}", "/");
 
-        String nameShort = (String) orgObject.get("nameShort");
-
-        String nameFull = (String) orgObject.get("nameFull");
-
-        String address = (String) orgObject.get("address");
-
-        String numberPhone = (String) orgObject.get("numberPhone");
-
-        String dateOfEstablishment = (String) orgObject.get("dateOfEstablishment");
-
-        String inn = (String) orgObject.get("inn");
-
-        String number = (String) orgObject.get("number");
-
-        String ogrn = (String) orgObject.get("ogrn");
-
-        JSONObject cennieBumagiObject = (JSONObject) org.get("cennieBumagi");
-
-        String code = (String) cennieBumagiObject.get("code");
-
-        String dateOfEnd = (String) cennieBumagiObject.get("dateOfEnd");
-
-        String nameOfOwner = (String) cennieBumagiObject.get("nameOfOwner");
-
-        String money = (String) cennieBumagiObject.get("money");
-
-        String id = (String) cennieBumagiObject.get("id");
-
+        DateTimeFormatter formatter;
+        if (newDate.length() > 8) {
+            formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        } else
+            formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
+        return LocalDate.parse(newDate, formatter);
     }
 
+    public static <S, T> List<T> convert(List<S> list, Class<T> dest) {
+        if (list == null) {
+            throw new IllegalArgumentException("Null parameters are not allowed");
+        }
+        return list
+                .stream()
+                .map(element -> modelMapper.map(element, dest))
+                .collect(Collectors.toList());
+    }
 }
-
